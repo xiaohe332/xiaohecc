@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>ATT不连环泡泡龙</title>
+
+    <meta charset="UTF-8">
+    <meta name="author" content="xiaohe" />
+    <meta name="keywords" content="javascript,html">
+
+    <link href="./mystyle.css" type="text/css" rel="stylesheet">
+
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+</head>
+
+<body>
+
+    <div width="100%" height="200px" style="background-color:rgb(226, 27, 27)">
+        <h1 class='hlstyle'>幸运纸牌</h1>
+        <div style="width:50%; height:300px; background-color:rgb(231, 97, 48); float: left">
+            <p>这是左边的记分牌</p>
+            <table border="2px" style="width:60%; height:60%;color: rgb(13, 12, 14)" id="targeTable">
+                <tr>
+                    <td>五条 </td>
+                    <td id="bonus_0">5000</td>
+                </tr>
+                <tr>
+                    <td>皇家大顺</td>
+                    <td id="bonus_1">3000</td>
+                </tr>
+                <tr>
+                    <td>同花顺 </td>
+
+                    <td id="bonus_2">1000</td>
+                </tr>
+                <tr>
+                    <td>四条 </td>
+                    <td id="bonus_3">500</td>
+                </tr>
+
+            </table>
+
+        </div>
+
+        <div style="width:50%; height:300px; background-color:rgb(87, 77, 172); float: left ">
+
+            <p>这是右边的记分牌</p>
+            <table border="2px" style="width:60%; height:60%; color: rgb(19, 19, 20)" id="targeTable">
+                <tr>
+                    <td>5K五条 </td>
+                    <td id="poker_0">0</td>
+
+                    <td>RS皇家大顺</td>
+                    <td id="poker_1">0</td>
+
+                    <td>SF同花顺 </td>
+                    <td id="poker_2">0</td>
+                </tr>
+                <tr>
+                    <td>4K四条 </td>
+                    <td id="poker_3">0</td>
+
+                    <td>FH三带对</td>
+                    <td id="poker_4">0</td>
+
+                    <td>F1同花顺</td>
+                    <td id="poker_5">0</td>
+                </tr>
+                <tr>
+                    <td>ST顺子</td>
+                    <td id="poker_6">0</td>
+
+                    <td>3K三条</td>
+                    <td id="poker_7">0</td>
+
+                    <td>2P2对</td>
+                    <td id="poker_8">0</td>
+
+                    <td>1P1对</td>
+                    <td id="poker_9">0</td>
+
+                </tr>
+                <tr>
+                    <td>总分 </td>
+                    <td id="total_socer">1000</td>
+                    <td>下注 </td>
+                    <td id="pour_socer">0</td>
+                </tr>
+            </table>
+
+        </div>
+
+    </div>
+
+    <div style="width:100%; height:500px; background-color:rgb(177, 210, 30) ; float:left ; text-align:center">
+        <div style="width:20%; background-color: orange; float:left ; text-align:center ">
+            <img id="card_0" width="100%" src="./card4/back.jpg" />
+            <h2 class="holdstyle" id="card_label_0">HOLD</h2>
+        </div>
+        <div style="width:20%; background-color:red; float:left ; text-align:center ">
+            <img id="card_1" width="100%" src="./card4/back.jpg" />
+            <h2 class="holdstyle" id="card_label_1">HOLD</h2>
+        </div>
+        <div style="width:20%; background-color: paleturquoise; float:left ; text-align:center ">
+            <img id="card_2" width="100%" src="./card4/back.jpg" />
+            <h2 class="holdstyle" id="card_label_2">HOLD</h2>
+        </div>
+        <div style="width:20%; background-color:forestgreen; float:left ; text-align:center ">
+            <img id="card_3" width="100%" src="./card4/back.jpg" />
+            <h2 class="holdstyle" id="card_label_3">HOLD</h2>
+        </div>
+        <div style="width:20%; background-color:burlywood; float:left ; text-align:center ">
+            <img id="card_4" width="100%" src="./card4/back.jpg" />
+            <h2 class="holdstyle" id="card_label_4">HOLD</h2>
+        </div>
+
+    </div>
+
+    <div style="width:100%; height:400px; background-color:rgb(31, 245, 77) ;float: left ;text-align:center">
+
+        <input id="pour_input" type="text" name="pour"
+            style="width:180px; height:100px;font-size:30px"><span>随机</span></button>
+
+        <button id="plus" style="width:180px; height:100px;font-size:30px"><span>+100</span></button>
+        <button id="minus" style="width:180px; height:100px;font-size:30px"><span>-</span></button>
+        <button id="start_btn" onclick="onClickRandom()"
+            style="width:180px; height:100px;font-size:30px"><span>开始</span></button>
+        <button onclick="onClickHold()" style="width:180px; height:100px;font-size:30px"><span>改变 </span></button>
+
+        <button onclick="onClickReset()" style="width:180px; height:100px;font-size:30px"><span>重置</span></button>
+
+    </div>
+
+    <script src="./jquery-3.3.1.js"></script>
+
+    <script>
+        const bonusText = []; //奖金池记分牌
+        for (let i = 0; i < 4; i++) {
+            bonusText.push($('bouns_' + i));
+        }
+        const pokersText = []; //牌型记分牌
+        for (let i = 0; i < 10; i++) {
+            pokersText.push($('#poker_' + i));
+        }
+        //每种牌型对应的倍率
+        //5K => 750
+        //...
+        //1p => 1
+        const pokersRate = [
+            750, 250, 150, 60, 10,
+            7, 5, 3, 2, 1
+        ];
+
+        let pournum = 1000; //总分
+        const totalText = $('#total_socer'); //总分
+        const pourText = $('#pour_socer'); //下注分
+
+        //显示文字 text.show()
+        //隐藏文字 text.hide()
+
+
+        const cardImages = [];
+
+        const cardLables = [] //保留卡牌标签
+
+        let keep = new Array()
+        for (let i = 0; i < 5; i++) {
+            const card = $(`#card_${i}`);
+            cardImages.push(card);
+
+            const text = $(`#card_label_${i}`)
+            cardLables.push(text)
+            text.isShown = false
+            text.hide()
+
+            card.on('click', () => {
+                text.isShown = !text.isShown
+                text.isShown ? text.show() : text.hide()
+
+                if (text.isShown) {
+                    text.show();
+                    //   text.isShown = false;
+                } else {
+                    text.hide();
+                    //    text.isShown = true;
+                }
+
+                if (text.isShown) {
+                    keep.push(i)
+                } else {
+                    delete keep[keep.indexOf(i)]
+                }
+
+                const temp = []
+                keep.forEach(e => {
+                    if (e || e === 0) {
+                        temp.push(e)
+                    }
+                })
+                keep = temp
+                console.log('keep: ', keep)
+            })
+        }
+    //   const setCardImg = (cards) => {
+    //         console.log("--cards:");
+    //         for (let i = 0; i < cards.length; i += 1) {
+
+    //             const card = cards[i];
+
+    //             cardImages[i].attr('src', card.path);
+
+    //         }
+
+    //     };
+
+        function onClickHold() {
+            console.log('传送数据keep:' + keep);
+            $.post('./switch', {
+                keep
+            }, function (res) {
+                console.log("--switch-res:", res);
+//                setCardImg(res.cards);
+                $(`#final_result`).text(res.result);
+                $(`#Game_coin`).text(res.gameCoin);
+                $(`#win_score`).text(res.winCoin);
+
+                setTimeout(function () {
+                    alert('游戏结束时，结果为：' + res.result);
+                }, 1 * 1000);
+            });
+            //重置游戏
+            gameStatus = 'END';
+        }
+
+        const pourInput = $(`#pour_input`);
+        const plusBtn = $(`#plus`);
+        const minusBtn = $(`#minus`);
+        const startBtn = $(`#start_btn`);
+
+        let pourScore = 0;
+
+        plusBtn.on('click', () => {
+            pourScore += 100;
+            pournum -= 100;
+            totalText.text(pournum);
+            pourInput.val(pourScore);
+            pourText.text(pourScore);
+            updateDisplay(pourScore);
+
+        })
+
+        let gameStart = false
+
+        startBtn.on('click', () => {
+            $.post('/pour', {
+                coin: pourScore
+            }, res => {
+                if (res.code === 0) {
+                    const cards = res.cards
+                    for (let i = 0; i < cards.length; i++) {
+                        const card = cards[i];
+                        const url = `./cards/${card._type}/${card._value}.png`;
+                        $(`#card_${i}`).attr('src', url);
+                    }
+                    gameStart = true
+                }
+            })
+        })
+
+        minusBtn.on('click', () => {
+            pourScore -= 100;
+            pournum += 100;
+            if (pourScore < 0) {
+                pourScore = 0;
+            }
+
+
+            pourInput.val(pourScore);
+            totalText.text(pournum);
+            pourText.text(pourScore);
+            updateDisplay(pourScore);
+        })
+
+        let updateDisplay = score => {
+            for (let i = 0; i < pokersRate.length; i++) {
+                const td = pokersText[i];
+                const rate = pokersRate[i];
+                td.text(score * rate);
+            }
+        }
+
+        function onClickRandom() {
+            $.get('/random', function (res) {
+                const cards = randomCards();
+                console.log(cards);
+                for (let i = 0; i < 5; i++) {
+                    const img = cardImages[i];
+                    const data = cards[i];
+                    img.attr('src', data.relativeURL());
+                }
+            })
+        }
+    </script> -->
+
+    <script>
+        function onClickRandom() {
+            // 1. send / random request
+
+            $.get('/random', function (res) {
+                const cards = res.cards;
+                console.log('res:', res);
+
+                // 2. use json array to create image URL
+                for (let i = 0; i < cards.length; i++) {
+                    const card = cards[i];
+                    const url = `./card4/${card._type}/${card._value}.png`;
+                    console.log("--imgurl", url);
+                    $(`#card_${i}`).attr('src', url);
+
+                }
+                $(`#right_result`).text(res.result);
+            })
+        }
+        let onClickReset = () => {
+            for (let i = 0; i < 5; i++) {
+                $(`#card_${i}`).attr('src', './card4/back.jpg');
+            }
+        }
+    </script>
+
+</body>
+
+</html>
